@@ -1,11 +1,3 @@
-//
-//  ContentView.swift
-//  ios_frontend
-//
-//  Created by Андрей Кабылин on 25.04.2020.
-//  Copyright © 2020 RedGoosePaws. All rights reserved.
-//
-
 import SwiftUI
 
 struct ContentView: View {
