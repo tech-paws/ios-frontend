@@ -18,19 +18,44 @@ class RenderScene: SKScene {
         
         color.reserveCapacity(1000)
         pos2f.reserveCapacity(1000)
+        
+        let cameraNode = SKCameraNode()
+        addChild(cameraNode)
+        self.camera = cameraNode
     }
     
     override func update(_ currentTime: TimeInterval) {
         step()
-        let commands = getRenderCommands()
         clearAll()
+        set_view_port_size(Int32(size.width), Int32(size.height))
         
-        for command in commands {
-            handleCommand(command: command)
+        clearData()
+        let execCommands = getExecCommands()
+        
+        for command in execCommands {
+            handleExecCommand(command)
+        }
+
+        clearData()
+        let renderCommands = getRenderCommands()
+        
+        for command in renderCommands {
+            handleRenderCommand(command)
         }
     }
     
-    private func handleCommand(command: RenderCommand) {
+    private func updateCameraPosition() {
+        assert(pos2f.count > 0)
+
+        camera?.position = CGPoint(
+            x: size.width / 2 - pos2f[0].x,
+            y: size.height / 2 - pos2f[0].y
+        )
+
+        clearData()
+    }
+
+    private func handleRenderCommand(_ command: RenderCommand) {
         switch command {
         case .drawLines:
             drawLines()
@@ -50,11 +75,27 @@ class RenderScene: SKScene {
                     y: CGFloat(y)
                 )
             )
-        default:
-            print("Nothing")
+        case .setColorUniform:
+            break;
+        case .pushColorShader:
+            break;
         }
     }
     
+    private func handleExecCommand(_ command: ExecCommand) {
+        switch command {
+        case .pushPos2f(let x, let y):
+            pos2f.append(
+                CGPoint(
+                    x: CGFloat(x),
+                    y: CGFloat(y)
+                )
+            )
+        case .updateCameraPosition:
+            updateCameraPosition()
+        }
+    }
+
     private func drawLines() {
         let lines = SKShapeNode()
         let pathToDraw = CGMutablePath()
