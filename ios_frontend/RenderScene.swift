@@ -27,8 +27,7 @@ class RenderScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         step()
         clearAll()
-        set_view_port_size(Int32(size.width), Int32(size.height))
-        
+        sendRequestCommand(.setViewportSize(width: Int(size.width), height: Int(size.height)))
         clearData()
         let execCommands = getExecCommands()
         

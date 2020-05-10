@@ -8,8 +8,12 @@ typedef struct {
   uintptr_t length;
 } RawBuffer;
 
+RawBuffer get_exec_commands(void);
+
 RawBuffer get_render_commands(void);
 
 void init_world(void);
+
+void send_request_commands(RawBuffer data);
 
 void step(void);
